@@ -124,13 +124,15 @@ NYARU_BURST_LINK NSComparisonResult compareDate(NSDate *value1, NSDate *value2);
         }
     }
     for (NSUInteger index = 0U; index < _index.count; index++) {
-        NyaruIndex *nyaruIndex = [_index objectAtIndex:index];
-        if ([nyaruIndex.keySet intersectsSet:[NSSet setWithObject:key]]) {
-            [nyaruIndex.keySet removeObject:key];
-            if (nyaruIndex.keySet.count == 0U) {
-                [_index removeObjectAtIndex:index];
+        @autoreleasepool {
+            NyaruIndex *nyaruIndex = [_index objectAtIndex:index];
+            if ([nyaruIndex.keySet intersectsSet:[NSSet setWithObject:key]]) {
+                [nyaruIndex.keySet removeObject:key];
+                if (nyaruIndex.keySet.count == 0U) {
+                    [_index removeObjectAtIndex:index];
+                }
+                return;
             }
-            return;
         }
     }
 }
