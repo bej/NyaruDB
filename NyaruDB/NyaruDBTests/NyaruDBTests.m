@@ -388,5 +388,49 @@
     NSLog(@"------------------------------------------------");
 }
 
+- (void)test21putDocuments
+{
+    NyaruDB *db = [NyaruDB instance];
+    
+    NyaruCollection *collection = [db collection:@"speed"];
+    [collection removeAll];
+    [collection createIndex:@"group"];
+    
+    NSMutableArray *documents = [NSMutableArray arrayWithCapacity:1000];
+    for (NSInteger loop = 0; loop < 1000; loop++) {
+        [documents addObject:@{
+         @"name": @"Test",
+         @"url": @"https://github.com/Kelp404/NyaruDB",
+         @"phone": @"0123456",
+         @"address": @"1600 Amphitheatre Parkway Mountain View, CA 94043, USA",
+         @"group": [NSNumber numberWithInt:arc4random() % 512],
+         @"email": @"test@phate.org",
+         @"level": @0,
+         @"updateTime": @""
+         }];
+    }
+    NSDate *timer = [NSDate date];
+    [collection putDocuments:documents];
+    
+    NSLog(@"------------------------------------------------");
+    NSLog(@"insert 1k data at once cost : %f ms", [timer timeIntervalSinceNow] * -1000.0);
+    NSLog(@"------------------------------------------------");
+    [collection waitForWriting];
+    
+    timer = [NSDate date];
+    if (collection.all.fetch) { };
+    NSLog(@"------------------------------------------------");
+    NSLog(@"fetch 1k data cost : %f ms", [timer timeIntervalSinceNow] * -1000.0);
+    NSLog(@"------------------------------------------------");
+    
+    timer = [NSDate date];
+    for (NSInteger index = 0; index < 10; index++) {
+        if ([collection where:@"group" equal:[NSNumber numberWithInt:arc4random() % 512]].fetch) { }
+    }
+    NSLog(@"------------------------------------------------");
+    NSLog(@"search documents in 1k data for 10 times cost : %f ms", [timer timeIntervalSinceNow] * -1000.0);
+    NSLog(@"------------------------------------------------");
+}
+
 
 @end

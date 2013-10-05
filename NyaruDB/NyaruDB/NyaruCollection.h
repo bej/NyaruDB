@@ -92,6 +92,7 @@
  @return: the put document.
  */
 - (NSMutableDictionary *)put:(NSDictionary *)document;
+- (NSMutableArray *)putDocuments:(NSArray *)documents;
 /**
  Please use [NyaruCollection put:]
  It will be removed in 1.4.
